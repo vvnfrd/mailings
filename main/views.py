@@ -1,11 +1,9 @@
 # from django.shortcuts import render
 import datetime
 import time
-import psycopg2
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.mail import send_mail
-from django.db.models import Q
 from django.forms import inlineformset_factory
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -150,37 +148,34 @@ def send_mailing(pk):
         print(i.email)
         email_list.append(i.email)
 
-        send_mail(
-                subject=Letter.objects.get(pk=letter_pk).title,
-                message=Letter.objects.get(pk=letter_pk).body,
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=email_list
-        )
+    send_mail(
+            subject=Letter.objects.get(pk=letter_pk).title,
+            message=Letter.objects.get(pk=letter_pk).body,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=email_list
+    )
 
 
 def start(request, pk):
 
-    periodicity = Mailing.objects.get(pk=pk).periodicity
-    first_sent = Mailing.objects.get(pk=pk).first_sent
-    next_sent = first_sent + datetime.timedelta(days=periodicity)
+    # next_sent = first_sent + datetime.timedelta(days=periodicity)
     mailing = get_object_or_404(Mailing, pk=pk)
-
+    periodicity = mailing.periodicity
+    first_sent = mailing.first_sent
 
 
     scheduler = BackgroundScheduler()
     print(123)
-    mailing.job_id = f'job_{pk}'
-    scheduler.add_job(send_mailing, 'date', run_date=first_sent, next_run_time=next_sent, args=[pk], id=mailing.job_id)
-    mailing.first_sent = next_sent
-    mailing.next_sent = next_sent + datetime.timedelta(days=periodicity)
-    mailing.save()
+    scheduler.add_job(send_mailing, 'cron', start_date=first_sent, day=periodicity, args=[pk], id=f'job_{pk}')
     scheduler.start()
     mailing.status = 'running'
+    mailing.job_id = f'job_{pk}'
     mailing.save()
-    return redirect(reverse('main:mailing_list'))
+    return redirect('main:mailing_list')
 
 
 def stop(request, pk):
+
     mailing = get_object_or_404(Mailing, pk=pk)
     scheduler = BackgroundScheduler()
     scheduler.pause_job(job_id=f'job_{pk}')
