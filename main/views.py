@@ -1,10 +1,7 @@
-# from django.shortcuts import render
 import datetime
-import time
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.mail import send_mail
-from django.forms import inlineformset_factory
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -43,7 +40,7 @@ class ClientUpdateView(UpdateView):
     template_name = 'main/client/client_form.html'
 
     def get_success_url(self):
-        return reverse('main:mailing_info', args=[self.kwargs.get('pk')])
+        return reverse('main:client_info', args=[self.kwargs.get('pk')])
 
 
 class ClientDeleteView(DeleteView):
