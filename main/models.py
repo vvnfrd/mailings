@@ -33,7 +33,7 @@ class Mailing(models.Model):
     # email = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='почты', **NULLABLE)
     email = models.ManyToManyField(Client, verbose_name='почты')
     """ДОДЕЛАТЬ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"""
-    first_sent = models.DateTimeField(verbose_name='Дата и время первой отправки')
+    first_sent = models.DateTimeField(verbose_name='Дата и время будущей отправки')
     next_sent = models.DateTimeField(verbose_name='Дата и время следующей отправки', **NULLABLE)
     periodicity = models.IntegerField(default=7, verbose_name='периодичность')
     status = models.BooleanField(default=False, verbose_name='статус')
