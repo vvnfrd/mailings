@@ -38,7 +38,6 @@ class Mailing(models.Model):
     periodicity = models.IntegerField(default=7, verbose_name='периодичность')
     status = models.CharField(default='created', max_length=30, verbose_name='статус')
     letter = models.ForeignKey(Letter, on_delete=models.CASCADE, verbose_name='письмо', **NULLABLE)
-    job_id = models.CharField(max_length=20, unique=True, verbose_name='id APSheduler', **NULLABLE)
 
     def __str__(self):
         return f'Рассылка {self.first_sent}'
