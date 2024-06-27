@@ -17,11 +17,7 @@
                   <a class="btn btn-primary" href="{% url 'main:mailing_list' %}" role="button">Назад</a>
                 </div>
                 <div class="btn-group">
-                  {% if mailing.status == 'running' %}
-                    <a class="btn btn-danger" href="{% url 'main:stop_mailing' mailing.pk %}" role="button">Выключить</a>
-                  {% else %}
-                    <a class="btn btn-success" href="{% url 'main:start_mailing' mailing.pk %}" role="button">Включить рассылку</a>
-                  {% endif %}
+                  <a class="btn btn-success" href="{% url 'main:one_time_mailing' mailing.pk %}" role="button">Разовая отправка рассылки</a>
                 </div>
               </div>
             </div>

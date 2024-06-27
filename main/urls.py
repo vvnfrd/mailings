@@ -1,7 +1,7 @@
 from django.urls import path
 from main.views import ClientListView, ClientDetailView, MailingListView, MailingDetailView, MailingCreateView, \
     MailingUpdateView, MailingDeleteView, ClientCreateView, ClientUpdateView, ClientDeleteView, LetterListView, \
-    LetterDetailView, LetterCreateView, LetterUpdateView, LetterDeleteView, start, stop
+    LetterDetailView, LetterCreateView, LetterUpdateView, LetterDeleteView, send_mailing
 from main.apps import MainConfig
 
 app_name = MainConfig.name
@@ -29,6 +29,5 @@ urlpatterns = [
     path('letter/delete/<int:pk>/', LetterDeleteView.as_view(), name='letter_delete'),
 
     #Включение поштучной рассылки
-    path('start-mailing/<int:pk>/', start, name='start_mailing'),
-    path('stop-mailing/<int:pk>/', stop, name='stop_mailing'),
+    path('one-time-mailing/<int:pk>/', send_mailing, name='one_time_mailing'),
 ]

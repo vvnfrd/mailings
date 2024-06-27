@@ -2,7 +2,8 @@ import datetime
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.mail import send_mail
-from django.shortcuts import redirect, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -133,10 +134,8 @@ class LetterDeleteView(DeleteView):
 """Отправка писем/Рассылка"""
 
 
-def send_mailing(pk):
-    zone = pytz.timezone(settings.TIME_ZONE)
-    current_datetime = datetime.datetime.now(zone)
-    # mailings = Mailing.objects.filter(Q(status='created', first_sent=current_datetime))
+def send_mailing(request, pk):
+    print(request)
     mailings = Mailing.objects.get(pk=pk)
     letter_pk = mailings.letter_id
     clients = mailings.email.all()
@@ -151,32 +150,5 @@ def send_mailing(pk):
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=email_list
     )
-
-
-def start(request, pk):
-
-    # next_sent = first_sent + datetime.timedelta(days=periodicity)
-    mailing = get_object_or_404(Mailing, pk=pk)
-    periodicity = mailing.periodicity
-    first_sent = mailing.first_sent
-
-
-    scheduler = BackgroundScheduler()
-    print(123)
-    scheduler.add_job(send_mailing, 'cron', start_date=first_sent, day=periodicity, args=[pk], id=f'job_{pk}')
-    scheduler.start()
-    mailing.status = 'running'
-    mailing.job_id = f'job_{pk}'
-    mailing.save()
-    return redirect('main:mailing_list')
-
-
-def stop(request, pk):
-
-    mailing = get_object_or_404(Mailing, pk=pk)
-    scheduler = BackgroundScheduler()
-    scheduler.pause_job(job_id=f'job_{pk}')
-    mailing.status = 'paused'
-    mailing.save()
-    return redirect(reverse('main:mailing_list'))
+    return HttpResponseRedirect(reverse_lazy('main:mailing_list'))
 
