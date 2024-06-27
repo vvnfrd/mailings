@@ -36,7 +36,7 @@ class Mailing(models.Model):
     first_sent = models.DateTimeField(verbose_name='Дата и время первой отправки')
     next_sent = models.DateTimeField(verbose_name='Дата и время следующей отправки', **NULLABLE)
     periodicity = models.IntegerField(default=7, verbose_name='периодичность')
-    status = models.CharField(default='created', max_length=30, verbose_name='статус')
+    status = models.BooleanField(default=False, verbose_name='статус')
     letter = models.ForeignKey(Letter, on_delete=models.CASCADE, verbose_name='письмо', **NULLABLE)
 
     def __str__(self):
