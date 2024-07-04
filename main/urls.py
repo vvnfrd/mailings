@@ -10,7 +10,7 @@ app_name = MainConfig.name
 
 urlpatterns = [
     #CRUD Рассылок
-    path('', cache_page(60)(MailingListView.as_view()), name='mailing_list'),
+    path('', MailingListView.as_view(), name='mailing_list'),
     path('mailing/<int:pk>/', cache_page(60)(MailingDetailView.as_view()), name='mailing_info'),
     path('mailing/create/', MailingCreateView.as_view(), name='mailing_create'),
     path('mailing/update/<int:pk>/', MailingUpdateView.as_view(), name='mailing_update'),
