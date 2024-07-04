@@ -6,8 +6,9 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div class="col">
           <div class="card shadow-sm">
+            {% if request.user|has_group:"manager" %}
+            <img src="{{user.avatar | media_filter}}" alt="Фото">
             <div class="card-body">
-              {% if request.user|has_group:"manager" %}
                 <p class="card-text">Почта: {{user.email}}</p>
                 <p class="card-text">Телефон: {{user.phone}}</p>
                 <p class="card-text">Страна: {{user.country}}</p>
@@ -19,10 +20,10 @@
                   <div class="btn-group">
                   </div>
                 </div>
-              {% else %}
+            </div>
+            {% else %}
                 <p class="card-text">Вы не являетесь менеджером</p>
               {% endif %}
-            </div>
           </div>
         </div>
       </div>

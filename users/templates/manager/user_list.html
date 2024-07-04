@@ -9,6 +9,7 @@
         {% for user in user_list %}
           <div class="col">
             <div class="card shadow-sm">
+              <img src="{{user.avatar | media_filter}}" alt="Фото">
               <div class="card-body">
                 <p class="card-text">Почта: {{user.email}}</p>
                 <p class="card-text">Телефон: {{user.phone}}</p>
