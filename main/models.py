@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from users.models import User
 
 NULLABLE = {'blank' : True, 'null' : True}
 
@@ -8,6 +9,7 @@ class Client(models.Model):
     email = models.EmailField(unique=True, verbose_name='почта')
     fullname = models.CharField(max_length=100, verbose_name='ФИО')
     comment = models.CharField(max_length=200, verbose_name='комментарий', **NULLABLE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='автор', **NULLABLE)
 
     def __str__(self):
         return f'Клиент {self.email}'
@@ -20,6 +22,7 @@ class Client(models.Model):
 class Letter(models.Model):
     title = models.CharField(max_length=50, verbose_name='Заголовок')
     body = models.CharField(max_length=500, verbose_name='Текст')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='автор', **NULLABLE)
 
     def __str__(self):
         return f'{self.title}'
@@ -38,6 +41,7 @@ class Mailing(models.Model):
     periodicity = models.IntegerField(default=7, verbose_name='периодичность')
     status = models.BooleanField(default=False, verbose_name='статус')
     letter = models.ForeignKey(Letter, on_delete=models.CASCADE, verbose_name='письмо', **NULLABLE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='автор', **NULLABLE)
 
     def __str__(self):
         return f'Рассылка {self.first_sent}'
@@ -46,11 +50,13 @@ class Mailing(models.Model):
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
 
+
 class TryMailing(models.Model):
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='рассылка', **NULLABLE)
     last_try = models.DateTimeField(default=datetime.now, verbose_name='дата и время последней попытки')
     status_try = models.BooleanField(default=False, verbose_name='статус попытки')
     answer = models.CharField(max_length=400, **NULLABLE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='автор', **NULLABLE)
 
     def __str__(self):
         return f'Попытка {self.last_try}'

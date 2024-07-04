@@ -7,19 +7,24 @@
         <div class="col">
           <div class="card shadow-sm">
             <div class="card-body">
-              <p class="card-text">Почта: {{mailing.email}}</p>
-              <p class="card-text">Дата и время первой отправки: {{mailing.first_sent}}</p>
-              <p class="card-text">Периодичность: {{mailing.periodicity}}</p>
-              <p class="card-text">Статус: {{mailing.status}}</p>
-              <p class="card-text">Письма: {{mailing.letter}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a class="btn btn-primary" href="{% url 'main:mailing_list' %}" role="button">Назад</a>
+              {% if mailing.author == user or user.is_superuser %}
+                <p class="card-text">Почта: {{mailing.email}}</p>
+                <p class="card-text">Дата и время первой отправки: {{mailing.first_sent}}</p>
+                <p class="card-text">Периодичность: {{mailing.periodicity}}</p>
+                <p class="card-text">Статус: {{mailing.status}}</p>
+                <p class="card-text">Письма: {{mailing.letter}}</p>
+                <p class="card-text">(УБРАТЬ) Автор: {{mailing.author}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a class="btn btn-primary" href="{% url 'main:mailing_list' %}" role="button">Назад</a>
+                  </div>
+                  <div class="btn-group">
+                    <a class="btn btn-success" href="{% url 'main:one_time_mailing' mailing.pk %}" role="button">Разовая отправка рассылки</a>
+                  </div>
                 </div>
-                <div class="btn-group">
-                  <a class="btn btn-success" href="{% url 'main:one_time_mailing' mailing.pk %}" role="button">Разовая отправка рассылки</a>
-                </div>
-              </div>
+              {% else %}
+                <p class="card-text">Вы не являетесь владельцом этой рассылки</p>
+              {% endif %}
             </div>
           </div>
         </div>

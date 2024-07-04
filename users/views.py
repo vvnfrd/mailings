@@ -40,7 +40,7 @@ def email_verification(request, token):
 class ProfileView(UpdateView):
     model = User
     form_class = UserProfileForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('main:mailing_list')
 
     def get_object(self, queryset=None):
         return self.request.user

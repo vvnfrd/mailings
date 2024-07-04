@@ -1,6 +1,7 @@
 import datetime
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
@@ -32,6 +33,14 @@ class ClientCreateView(CreateView):
     success_url = reverse_lazy('main:client_list')
     template_name = 'main/client/client_form.html'
 
+    def form_valid(self, client):
+        if client.is_valid():
+            new_obj = client.save()
+            new_obj.author = self.request.user
+            new_obj.save()
+
+        return super().form_valid(client)
+
 
 class ClientUpdateView(UpdateView):
     model = Client
@@ -54,7 +63,7 @@ class ClientDeleteView(DeleteView):
 """CRUD Рассылки"""
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = 'main/mailing/mailing_list.html'
     # permission_required = 'catalog.view_product'
@@ -65,12 +74,20 @@ class MailingDetailView(DetailView):
     template_name = 'main/mailing/mailing_info.html'
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
     # permission_required = 'catalog.add_product'
     success_url = reverse_lazy('main:mailing_list')
     template_name = 'main/mailing/mailing_form.html'
+
+    def form_valid(self, mailing):
+        if mailing.is_valid():
+            new_obj = mailing.save()
+            new_obj.author = self.request.user
+            new_obj.save()
+
+        return super().form_valid(mailing)
 
 
 class MailingUpdateView(UpdateView):
@@ -111,6 +128,14 @@ class LetterCreateView(CreateView):
     # permission_required = 'catalog.add_product'
     success_url = reverse_lazy('main:letter_list')
     template_name = 'main/letter/letter_form.html'
+
+    def form_valid(self, letter):
+        if letter.is_valid():
+            new_obj = letter.save()
+            new_obj.author = self.request.user
+            new_obj.save()
+
+        return super().form_valid(letter)
 
 
 class LetterUpdateView(UpdateView):

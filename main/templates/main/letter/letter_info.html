@@ -7,13 +7,18 @@
         <div class="col">
           <div class="card shadow-sm">
             <div class="card-body">
-              <p class="card-text">Заголовок: {{letter.title}}</p>
-              <p class="card-text">Текст: {{letter.body}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a class="btn btn-primary" href="{% url 'main:letter_list' %}" role="button">Назад</a>
+              {% if letter.author == user or user.is_superuser %}
+                <p class="card-text">Заголовок: {{letter.title}}</p>
+                <p class="card-text">Текст: {{letter.body}}</p>
+                <p class="card-text">(УБРАТЬ) Автор: {{letter.author}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a class="btn btn-primary" href="{% url 'main:letter_list' %}" role="button">Назад</a>
+                  </div>
                 </div>
-              </div>
+              {% else %}
+                <p class="card-text">Вы не являетесь владельцом этого письма</p>
+              {% endif %}
             </div>
           </div>
         </div>

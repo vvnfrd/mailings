@@ -9,6 +9,7 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = ['email', 'password1', 'password2']
 
+
 class UserProfileForm(UserChangeForm):
 
     class Meta:
@@ -19,6 +20,7 @@ class UserProfileForm(UserChangeForm):
         super().__init__(*args, **kwargs)
 
         self.fields['password'].widget = forms.HiddenInput()
+
 
 class UserPassRecoveryForm(PasswordResetForm):
 
