@@ -7,7 +7,6 @@
       <p>
           <a class="btn btn-primary" href="{% url 'main:mailing_create' %}" role="button">Добавить рассылку</a>
         </p>
-      <p>Для редактирования и просмотра рассылки вы должны быть в системе</p>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         {% for mailing in mailing_list %}
         {% if mailing.author == user or user.is_superuser or user|has_group:"manager" %}
@@ -24,7 +23,9 @@
                     {% if user == mailing.author or user.is_superuser or perms.main.set_status or user|has_group:"manager" %}
                       <a class="btn btn-success" href="{% url 'main:mailing_update' mailing.pk %}" role="button">Редактировать</a>
                     {% endif %}
+                    {% if request.user|has_group:"manager" == False or mailing.author == user %}
                     <a class="btn btn-danger" href="{% url 'main:mailing_delete' mailing.pk %}" role="button">Удалить</a>
+                    {% endif %}
                   </div>
                 </div>
               </div>

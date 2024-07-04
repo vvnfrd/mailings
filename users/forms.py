@@ -27,3 +27,9 @@ class UserPassRecoveryForm(PasswordResetForm):
     class Meta:
         model = User
         fields = ['email']
+
+
+class UserFormForManager(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['is_active']

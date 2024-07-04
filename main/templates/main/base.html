@@ -1,4 +1,5 @@
 {% load static %}
+{% load has_group %}
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
   <head><script src="{% static 'js/color-modes.js' %}"></script>
@@ -177,6 +178,9 @@
           <a class="btn btn-success" href="{% url 'main:mailing_list' %}" role="button">Список рассылок</a>
           <a class="btn btn-success" href="{% url 'main:client_list' %}" role="button">Список клиентов</a>
           <a class="btn btn-success" href="{% url 'main:letter_list' %}" role="button">Список писем</a>
+          {% if request.user|has_group:"manager" %}
+            <a class="btn btn-success" href="{% url 'users:user_list' %}" role="button">Список пользователей</a>
+          {% endif %}
         {% else %}
           <p class="lead text-body-secondary">Чтобы создавать рассылки, войдите в систему</p>
         {% endif %}

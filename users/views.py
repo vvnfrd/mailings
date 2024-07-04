@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from django.core.mail import send_mail
-from users.forms import UserRegisterForm, UserProfileForm
+from users.forms import UserRegisterForm, UserProfileForm, UserFormForManager
 from users.models import User
 from config import settings
 import secrets
+
+"""Сервис пользователя"""
 
 
 class RegisterView(CreateView):
@@ -29,12 +31,12 @@ class RegisterView(CreateView):
         )
         return super().form_valid(form)
 
+
 def email_verification(request, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.save()
     return redirect(reverse('users:login'))
-
 
 
 class ProfileView(UpdateView):
@@ -44,3 +46,24 @@ class ProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+"""Сервис менеджера"""
+
+
+class UserListView(ListView):
+    model = User
+
+
+class UserDetailView(DetailView):
+    model = User
+
+
+class UserUpdateView(UpdateView):
+    model = User
+    form_class = UserFormForManager
+    success_url = reverse_lazy('users:user_list')
+    template_name = 'manager/user_form.html'
+
+    def get_success_url(self):
+        return reverse('users:user_info', args=[self.kwargs.get('pk')])
