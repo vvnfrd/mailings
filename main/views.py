@@ -2,6 +2,7 @@ import datetime
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
@@ -9,7 +10,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from config import settings
-from main.forms import MailingForm, ClientForm, LetterForm
+from main.forms import MailingForm, ClientForm, LetterForm, MailingFormForManager
 from main.models import Client, Mailing, Letter
 
 """CRUD Клиентов"""
@@ -18,12 +19,13 @@ from main.models import Client, Mailing, Letter
 class ClientListView(ListView):
     model = Client
     template_name = 'main/client/client_list.html'
-    # permission_required = 'catalog.view_product'
+    # permission_required = 'main.view_client'
 
 
 class ClientDetailView(DetailView):
     model = Client
     template_name = 'main/client/client_info.html'
+    # permission_required = 'main.view_client'
 
 
 class ClientCreateView(CreateView):
@@ -99,6 +101,17 @@ class MailingUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('main:mailing_info', args=[self.kwargs.get('pk')])
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.author or user.is_superuser:
+            # print(user, self.object.name)
+            return MailingForm
+        elif user.groups.filter(name='manager').exists():
+            return MailingFormForManager
+        else:
+            # print(user.email, self.object.author)
+            raise PermissionDenied()
 
 
 class MailingDeleteView(DeleteView):

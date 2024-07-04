@@ -22,3 +22,10 @@ class LetterForm(forms.ModelForm):
     class Meta:
         model = Letter
         fields = ('title', 'body')
+
+
+class MailingFormForManager(forms.ModelForm):
+
+    class Meta:
+        model = Mailing
+        fields = ('status',)
