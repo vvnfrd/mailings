@@ -1,9 +1,11 @@
+{% load has_group %}
 <div class="collapse text-bg-dark" id="navbarHeader">
     <div class="container">
       <div class="row">
         <div class="col-sm-8 col-md-7 py-4">
-          <h4>О нас</h4>
-          <p class="text-body-secondary">*текст*</p>
+          <p class="lead text-body">Общее количество рассылок: {{ 1 | total_mailings }}</p>
+        <p class="lead text-body">Общее количество активных рассылок: {{ 1 | active_mailings }}</p>
+        <p class="lead text-body">Общее количество клиентов для рассылок: {{ 1 | client_count }}</p>
         </div>
         <div class="col-sm-4 offset-md-1 py-4">
           <h4>Навигация</h4>
