@@ -1,0 +1,27 @@
+{% extends 'main/base.html'%}
+{% load has_group %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="{{blog.image | media_filter}}" alt="Фото">
+            <div class="card-body">
+              <p class="card-text">{{blog.title|title}}</p>
+              <p class="card-text">Содержимое: {{blog.text}}</p>
+              <p class="card-text">Кол-во просмотров: {{blog.views_counter}}</p>
+              <p class="card-text">Дата создания: {{blog.create_at}}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a class="btn btn-primary" href="{% url 'blogs:blog_list' %}" role="button">Назад</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
