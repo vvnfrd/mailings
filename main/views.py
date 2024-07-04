@@ -167,26 +167,3 @@ class LetterDeleteView(DeleteView):
     # permission_required = 'catalog.delete_product'
     success_url = reverse_lazy('main:letter_list')
     template_name = 'main/letter/letter_confirm_delete.html'
-
-
-"""Отправка писем/Рассылка"""
-
-
-def send_mailing(request, pk):
-    print(request)
-    mailings = Mailing.objects.get(pk=pk)
-    letter_pk = mailings.letter_id
-    clients = mailings.email.all()
-    email_list = []
-    for i in clients:
-        print(i.email)
-        email_list.append(i.email)
-
-    send_mail(
-            subject=Letter.objects.get(pk=letter_pk).title,
-            message=Letter.objects.get(pk=letter_pk).body,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=email_list
-    )
-    return HttpResponseRedirect(reverse_lazy('main:mailing_list'))
-

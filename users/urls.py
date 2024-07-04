@@ -1,7 +1,9 @@
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView
 from django.urls import path, reverse_lazy
+from django.views.decorators.cache import cache_page
 from users.apps import UsersConfig
-from users.views import RegisterView, ProfileView, email_verification, UserDetailView, UserListView, UserUpdateView
+from users.services import email_verification
+from users.views import RegisterView, ProfileView, UserDetailView, UserListView, UserUpdateView
 
 app_name = UsersConfig.name
 
@@ -25,7 +27,7 @@ urlpatterns = [
     path('password-reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html',
                                                                               success_url=reverse_lazy('users:login')), name='password_reset_confirm'),
     # Сервис менеджера
-    path('user_list', UserListView.as_view(template_name='manager/user_list.html'), name='user_list'),
-    path('user/<int:pk>/', UserDetailView.as_view(template_name='manager/user_info.html'), name='user_info'),
+    path('user_list', cache_page(60)(UserListView.as_view(template_name='manager/user_list.html')), name='user_list'),
+    path('user/<int:pk>/', cache_page(60)(UserDetailView.as_view(template_name='manager/user_info.html')), name='user_info'),
     path('user/update/<int:pk>/', UserUpdateView.as_view(), name='user_update')
 ]

@@ -19,9 +19,11 @@
                   <div class="btn-group">
                     <a class="btn btn-primary" href="{% url 'main:mailing_list' %}" role="button">Назад</a>
                   </div>
+                  {% if mailing.author == request.user%}
                   <div class="btn-group">
                     <a class="btn btn-success" href="{% url 'main:one_time_mailing' mailing.pk %}" role="button">Разовая отправка рассылки</a>
                   </div>
+                  {% endif %}
                 </div>
               {% else %}
                 <p class="card-text">Вы не являетесь владельцом этой рассылки</p>

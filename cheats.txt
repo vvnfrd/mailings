@@ -1,0 +1,7 @@
+RUN REDIS
+    sudo service redis-server start
+
+COMMAND AFTER DROP DB
+    python manage.py shell
+    from django.contrib.contenttypes.models import ContentType
+    ContentType.objects.all().delete()
