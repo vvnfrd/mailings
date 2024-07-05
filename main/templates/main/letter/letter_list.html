@@ -6,24 +6,25 @@
       <p>
           <a class="btn btn-primary" href="{% url 'main:letter_create' %}" role="button">Добавить письмо</a>
         </p>
-      <p>Для редактирования и просмотра рассылки вы должны быть в системе</p>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         {% for letter in letter_list %}
-        <div class="col">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <p class="card-text">Заголовок: {{letter.title}}</p>
-              <p class="card-text">ФИО: {{letter.body}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a class="btn btn-primary" href="{% url 'main:letter_info' letter.pk %}" role="button">Подробнее</a>
-                  <a class="btn btn-success" href="{% url 'main:letter_update' letter.pk %}" role="button">Редактировать</a>
-                  <a class="btn btn-danger" href="{% url 'main:letter_delete' letter.pk %}" role="button">Удалить</a>
+        {% if letter.author == user or user.is_superuser %}
+          <div class="col">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <p class="card-text">Заголовок: {{letter.title}}</p>
+                <p class="card-text">ФИО: {{letter.body}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a class="btn btn-primary" href="{% url 'main:letter_info' letter.pk %}" role="button">Подробнее</a>
+                    <a class="btn btn-success" href="{% url 'main:letter_update' letter.pk %}" role="button">Редактировать</a>
+                    <a class="btn btn-danger" href="{% url 'main:letter_delete' letter.pk %}" role="button">Удалить</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endif %}
         {% endfor %}
       </div>
     </div>

@@ -1,0 +1,36 @@
+{% extends 'main/base.html'%}
+{% load has_group %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          {% if user|has_group:"manager" %}
+        {% for user in user_list %}
+          <div class="col">
+            <div class="card shadow-sm">
+              <img src="{{user.avatar | media_filter}}" alt="Фото">
+              <div class="card-body">
+                <p class="card-text">Почта: {{user.email}}</p>
+                <p class="card-text">Телефон: {{user.phone}}</p>
+                <p class="card-text">Страна: {{user.country}}</p>
+                <p class="card-text">Статус: {{user.is_active}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a class="btn btn-primary" href="{% url 'users:user_info' user.pk %}" role="button">Подробнее</a>
+                    {% if request.user == mailing.author or request.user.is_superuser or request.user|has_group:"manager" %}
+                      <a class="btn btn-success" href="{% url 'users:user_update' user.pk %}" role="button">Редактировать</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        {% else %}
+        <p>У вас нет доступа к этой странице.</p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock %}
